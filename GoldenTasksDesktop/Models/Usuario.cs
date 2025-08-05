@@ -24,7 +24,7 @@ namespace GoldenTasksDesktop.Models
         [Required]
         public required string Password { get; set; }
         public ICollection<Tarea> Tareas { get; set; } = new List<Tarea>(); //Relación. 1:M
-        public ICollection<Medalla>? Medallas { get; set; }  // Las medallas del usuario. 1:M.
+        public ICollection<Medalla> Medallas { get; set; } = new List<Medalla>();  // Las medallas del usuario. 1:M.
 
     }
 }

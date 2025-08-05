@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GoldenTasksDesktop.Data;
+using GoldenTasksDesktop.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +21,17 @@ namespace GoldenTasksDesktop.Views
     /// </summary>
     public partial class DashboardView : Window
     {
+        private readonly GoldenTasksDbContext? _context;
         public DashboardView()
         {
+            _context = App.GoldenTasksDbContext;
+
+            if(_context != null)
+            {
+                UsuarioViewModel usuarioViewModel = new(_context);
+                this.DataContext = usuarioViewModel;
+            }
+
             InitializeComponent();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using GoldenTasksDesktop.Data;
-using GoldenTasksDesktop.Data.Repositories;
 using GoldenTasksDesktop.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,24 +17,22 @@ using System.Windows.Shapes;
 namespace GoldenTasksDesktop.Views
 {
     /// <summary>
-    /// Lógica de interacción para LoginView.xaml
+    /// Lógica de interacción para CrearUsuarioView.xaml
     /// </summary>
-    public partial class LoginView : Window
+    public partial class CrearUsuarioView : Window
     {
         private readonly GoldenTasksDbContext? _context;
-        
-        public LoginView()
+        public CrearUsuarioView()
         {
             InitializeComponent();
-
+            
             _context = App.GoldenTasksDbContext;
 
-            if (_context != null)
+            if(_context != null)
             {
                 UsuarioViewModel usuarioViewModel = new(_context);
                 this.DataContext = usuarioViewModel;
             }
-
         }
     }
 }

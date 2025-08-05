@@ -8,8 +8,14 @@
         mc:Ignorable="d"
         Title="Inicio de Sesión" Height="450" Width="800">
 
-    <Window.DataContext>
-        <vm:UsuarioViewModel/>
-    </Window.DataContext>
+    <StackPanel>
+        <Label Content="Usuario o Email"></Label>
+        <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label Content="Contraseña"></Label>
+        <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+        <!-- Luego cambiar a PasswordBox-->
+        <Button Content="Iniciar Sesión" Command="{Binding IniciarSesionCommand}"></Button>
+        <Label Content="{Binding Mensaje, UpdateSourceTrigger=PropertyChanged}"></Label>
+    </StackPanel>
 
 </Window>
