@@ -10,13 +10,12 @@ namespace GoldenTasksDesktop.Data.Repositories
     public interface IUsuarioRepository
     {
         Task<ICollection<Usuario>> ObtenerUsuariosAsync();
+        Usuario? ObtenerUsuarioPorId(int id);
         Task<Usuario?> ObtenerUsuarioPorIdAsync(int id);
         Task<Usuario?> ObtenerUsuarioPorUserNameAsync(string username);
         Task<Usuario?> ObtenerUsuarioPorEmailAsync(string email);
         Task AgregarUsuarioAsync(Usuario usuario);
         Task<ICollection<Tarea>> ObtenerTareasDelUsuarioAsync(int id);
-
-        
 
     }
 }

@@ -39,6 +39,10 @@ namespace GoldenTasksDesktop.Data.Repositories
             return await _context.Usuarios.FindAsync(id);
         }
 
+        public Usuario? ObtenerUsuarioPorId(int id)
+        {
+            return _context.Usuarios.Find(id);
+        }
         public async Task<Usuario?> ObtenerUsuarioPorUserNameAsync(string username)
         {
             return await _context.Usuarios.FirstOrDefaultAsync(u => u.UserName == username);

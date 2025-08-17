@@ -22,20 +22,9 @@ namespace GoldenTasksDesktop.Views
     /// </summary>
     public partial class LoginView : Window
     {
-        private readonly GoldenTasksDbContext? _context;
-        
         public LoginView()
         {
-            InitializeComponent();
-
-            _context = App.GoldenTasksDbContext;
-
-            if (_context != null)
-            {
-                UsuarioViewModel usuarioViewModel = new(_context);
-                this.DataContext = usuarioViewModel;
-            }
-
+            InitializeComponent();        
         }
     }
 }

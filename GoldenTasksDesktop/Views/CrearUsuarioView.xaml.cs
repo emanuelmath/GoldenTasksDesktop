@@ -1,4 +1,5 @@
 ﻿using GoldenTasksDesktop.Data;
+using GoldenTasksDesktop.Data.Repositories;
 using GoldenTasksDesktop.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,18 +22,9 @@ namespace GoldenTasksDesktop.Views
     /// </summary>
     public partial class CrearUsuarioView : Window
     {
-        private readonly GoldenTasksDbContext? _context;
         public CrearUsuarioView()
         {
             InitializeComponent();
-            
-            _context = App.GoldenTasksDbContext;
-
-            if(_context != null)
-            {
-                UsuarioViewModel usuarioViewModel = new(_context);
-                this.DataContext = usuarioViewModel;
-            }
         }
     }
 }

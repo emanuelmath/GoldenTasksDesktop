@@ -20,6 +20,6 @@
         <!-- Luego hacerlo con PasswordBox.-->
         <Button Content="Crear Usuario" Command="{Binding CrearUsuarioCommand}"></Button>
         <TextBlock Text="{Binding Mensaje}"></TextBlock>
-        <Button Content="Regresar"></Button>
+        <Button Content="Regresar" Command="{Binding RegresarALoginCommand}"></Button>
     </StackPanel>
 </Window>

@@ -10,7 +10,7 @@
 
     <StackPanel>
         <Label Content="Usuario o Email"></Label>
-        <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Text="{Binding UserNameOrEmail, UpdateSourceTrigger=PropertyChanged}"/>
         <Label Content="Contraseña"></Label>
         <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
         <!-- Luego cambiar a PasswordBox-->

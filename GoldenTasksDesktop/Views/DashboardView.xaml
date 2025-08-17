@@ -8,5 +8,9 @@
         mc:Ignorable="d"
         Title="DashboardView" Height="450" Width="800">
 
-    <TextBlock Text="{Binding Nombre}" Width="100" Height="50"/>
+    <StackPanel>
+        <TextBlock Text="{Binding Usuario.Nombre, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="50"/>
+        <TextBlock Text="Prueba"/>
+    </StackPanel>
+
 </Window>

@@ -1,33 +1,25 @@
-﻿using GoldenTasksDesktop.Data.Repositories;
+﻿using GoldenTasksDesktop.Commands;
+using GoldenTasksDesktop.Data.Repositories;
 using GoldenTasksDesktop.Models;
-using GoldenTasksDesktop.Commands;
+using GoldenTasksDesktop.Services;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using GoldenTasksDesktop.Data;
 using System.Windows.Input;
+
 
 namespace GoldenTasksDesktop.ViewModels
 {
-    public class UsuarioViewModel : BaseViewModel
+    public class CrearUsuarioViewModel : BaseViewModel
     {
-        private readonly GoldenTasksDbContext _context;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly INavigationService _navigationService;
 
-        private Usuario _usuario;
-        public Usuario Usuario
-        {
-            get => _usuario;
-            set 
-            { 
-                _usuario = value;
-                OnPropertyChanged(nameof(Usuario));
-            }
-        }
+        #region Atributos de UI
+
         private string _nombre = "";
         public string Nombre
         {
@@ -89,58 +81,27 @@ namespace GoldenTasksDesktop.ViewModels
                 OnPropertyChanged(nameof(Mensaje));
             }
         }
+        #endregion
 
-        public UsuarioViewModel(GoldenTasksDbContext context)
-        {
-           _context = context;
-           _usuarioRepository = new UsuarioRepository(context);
-
-            IniciarSesionCommand = new RelayCommand(async _ => await IniciarSesionAsync(UserName, Password), _ => PuedeIniciarSesion(UserName, Password));
-            CrearUsuarioCommand = new RelayCommand(async _ => await AgregarUsuarioAsync(Nombre, Email, UserName, Password, ConfirmPassword));
-        }
-
-        public ICommand IniciarSesionCommand { get; }
         public ICommand CrearUsuarioCommand { get; }
-        public async Task IniciarSesionAsync(string userNameOrEmail, string password)
+        public ICommand RegresarALoginCommand { get; }
+
+        public CrearUsuarioViewModel(IUsuarioRepository usuarioRepository, INavigationService navigationService)
         {
-           Usuario? usuario = await _usuarioRepository.ObtenerUsuarioPorUserNameAsync(userNameOrEmail.ToLower().Trim());
+            _usuarioRepository = usuarioRepository;
+            _navigationService = navigationService;
 
-           if(usuario != null)
-           {
-                if(BCrypt.Net.BCrypt.Verify(password, usuario.Password))
-                {
-                    Mensaje = "Inicio de sesión correcto.";
-                }
-                else
-                {
-                    Mensaje = "Contraseña incorrecta.";
-                }
-           }
-           else
-           {
-               Mensaje = "No existe el usuario con esas credenciales.";
-           }
-
-        }
-
-        public bool PuedeIniciarSesion(string username = "", string password = "")
-        {
-            if(!String.IsNullOrEmpty(username.Trim()) && !String.IsNullOrEmpty(password.Trim())) 
-            {
-                return true;
-            }
-            Mensaje = "Datos vacíos";
-            Console.WriteLine(BCrypt.Net.BCrypt.HashPassword("12345"));
-            return false;
+            CrearUsuarioCommand = new RelayCommand(async _ => await AgregarUsuarioAsync(Nombre, Email, UserName, Password, ConfirmPassword));
+            RegresarALoginCommand = new RelayCommand(_ => RegresarALogin());
         }
 
         public async Task AgregarUsuarioAsync(string nombre, string email, string userName, string password, string confirmPassword)
         {
-            if(!String.IsNullOrEmpty(nombre.Trim()) && !String.IsNullOrEmpty(email.Trim()) 
-                && !String.IsNullOrEmpty(userName.Trim()) && !String.IsNullOrEmpty(password.Trim()) 
+            if (!String.IsNullOrEmpty(nombre.Trim()) && !String.IsNullOrEmpty(email.Trim())
+                && !String.IsNullOrEmpty(userName.Trim()) && !String.IsNullOrEmpty(password.Trim())
                 && !String.IsNullOrEmpty(confirmPassword.Trim()))
             {
-                if(userName.Trim() == password.Trim())
+                if (password.Trim() == confirmPassword.Trim())
                 {
                     Usuario usuario = new Usuario()
                     {
@@ -151,7 +112,13 @@ namespace GoldenTasksDesktop.ViewModels
                     };
 
                     await _usuarioRepository.AgregarUsuarioAsync(usuario);
+                    Nombre = "";
+                    Email = "";
+                    UserName = "";
+                    Password = "";
+                    ConfirmPassword = "";
                     Mensaje = "¡Te has registrado exitosamente!";
+
                 }
                 else
                 {
@@ -164,6 +131,10 @@ namespace GoldenTasksDesktop.ViewModels
             }
         }
 
-
+        public void RegresarALogin()
+        {
+            _navigationService.NavegarA<LoginViewModel>();
+            Close();
+        }
     }
 }
