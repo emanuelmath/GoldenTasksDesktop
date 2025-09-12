@@ -1,12 +1,15 @@
 ﻿using GoldenTasksDesktop.Data;
 using GoldenTasksDesktop.Data.Repositories;
 using GoldenTasksDesktop.Services;
+using GoldenTasksDesktop.Services.NavigationData;
 using GoldenTasksDesktop.ViewModels;
 using GoldenTasksDesktop.Views;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
+
 
 namespace GoldenTasksDesktop
 {
@@ -24,13 +27,13 @@ namespace GoldenTasksDesktop
                 .Options;
 
             GoldenTasksDbContext = new GoldenTasksDbContext(options);
-            GoldenTasksDbContext.Database.Migrate();
+            //GoldenTasksDbContext.Database.Migrate();
 
             INavigationService? navigationService = null;
 
             BaseViewModel viewModelFactory(Type vmType, object? param = null) //Por ahora pongo un object nulleable dependiendo de qué parámetro extra necesite el VM.
             {
-                if(navigationService == null)
+                if (navigationService == null)
                 {
                     throw new Exception("El NavigationService no fue inicializado.");
                 }
@@ -43,11 +46,18 @@ namespace GoldenTasksDesktop
                 {
                     return new CrearUsuarioViewModel(new UsuarioRepository(GoldenTasksDbContext!), navigationService);
                 }
-                if(vmType == typeof(DashboardViewModel))
+                if (vmType == typeof(DashboardViewModel))
                 {
                     if (param != null) //&& typeof(param) == typeof(int)) 
                     {
-                        return new DashboardViewModel(new UsuarioRepository(GoldenTasksDbContext!), navigationService, Convert.ToInt32(param));
+                        return new DashboardViewModel(new UsuarioRepository(GoldenTasksDbContext!), new TareaRepository(GoldenTasksDbContext!), navigationService, Convert.ToInt32(param));
+                    }
+                }
+                if (vmType == typeof(AgregarTareaViewModel))
+                {
+                    if(param is AgregarTareaParams agregarTareaParams)
+                    {
+                        return new AgregarTareaViewModel(agregarTareaParams.IdUsuario, new TareaRepository(GoldenTasksDbContext!), navigationService, agregarTareaParams.OnAgregarTarea);
                     }
                 }
                 throw new Exception("Error al asignar un ViewModel o error en sus dependencias.");
@@ -61,4 +71,6 @@ namespace GoldenTasksDesktop
         }
     }
 
+
 }
+

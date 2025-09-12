@@ -1,0 +1,24 @@
+﻿<Window x:Class="GoldenTasksDesktop.Views.AgregarTareaView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GoldenTasksDesktop.Views"
+        mc:Ignorable="d"
+        Title="AgregarTareaView" Height="450" Width="800">
+    <StackPanel>
+        <Label Content="Nombre"></Label>
+        <TextBox Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Label Content="Descripción"></Label>
+        <TextBox Text="{Binding Descripcion, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Label Content="Clasificación"></Label>
+        <RadioButton Content="Oro" IsChecked="{Binding RadioButtonOro, Mode=TwoWay}"></RadioButton>
+        <RadioButton Content="Plata" IsChecked="{Binding RadioButtonPlata, Mode=TwoWay}"></RadioButton>
+        <RadioButton Content="Bronce" IsChecked="{Binding RadioButtonBronce, Mode=TwoWay}"></RadioButton>
+        <Label Content="Fecha de Expiración"></Label>
+        <DatePicker SelectedDate="{Binding FechaDeExpiracion, Mode=TwoWay}"></DatePicker>
+        <TextBlock Text="{Binding Mensaje}"></TextBlock>
+            <Button Content="Agregar Tarea" Command="{Binding AgregarTareaCommand}"></Button>
+        <Button Content="Regresar" Command="{Binding CerrarCommand}"></Button>
+    </StackPanel>
+</Window>

@@ -16,6 +16,8 @@
         <!-- Luego cambiar a PasswordBox-->
         <Button Content="Iniciar Sesión" Command="{Binding IniciarSesionCommand}"></Button>
         <Label Content="{Binding Mensaje, UpdateSourceTrigger=PropertyChanged}"></Label>
+        <Label Content="¿No tienes una cuenta?"></Label>
+        <Button Content="Crear Cuenta" Command="{Binding CrearCuentaCommand}"></Button>
     </StackPanel>
 
 </Window>

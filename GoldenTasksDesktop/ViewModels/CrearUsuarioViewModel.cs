@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -111,13 +112,35 @@ namespace GoldenTasksDesktop.ViewModels
                         Password = BCrypt.Net.BCrypt.HashPassword(password.Trim())
                     };
 
-                    await _usuarioRepository.AgregarUsuarioAsync(usuario);
-                    Nombre = "";
-                    Email = "";
-                    UserName = "";
-                    Password = "";
-                    ConfirmPassword = "";
-                    Mensaje = "¡Te has registrado exitosamente!";
+                    try
+                    {
+                        MailAddress m = new(email.Trim());
+                        var uUserName = await _usuarioRepository.ObtenerUsuarioPorUserNameAsync(userName.Trim());
+                        var uEmail = await _usuarioRepository.ObtenerUsuarioPorEmailAsync(email.Trim());
+
+                        if (uEmail != null)
+                        {
+                            Mensaje = "Ese correo ya está en uso.";
+                        }
+                        else if (uUserName != null)
+                        {
+                            Mensaje = "Ese nombre de usuario ya está en uso.";
+                        }
+                        else
+                        {
+                            await _usuarioRepository.AgregarUsuarioAsync(usuario);
+                            Nombre = "";
+                            Email = "";
+                            UserName = "";
+                            Password = "";
+                            ConfirmPassword = "";
+                            Mensaje = "¡Te has registrado exitosamente!";
+                        }
+                    }
+                    catch (FormatException)
+                    {
+                        Mensaje = "Ingresa un correo válido.";
+                    }
 
                 }
                 else

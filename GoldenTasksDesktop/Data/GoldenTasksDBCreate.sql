@@ -1,0 +1,32 @@
+-- Tabla 1: Usuario --
+CREATE TABLE Usuario (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nombre TEXT NOT NULL,
+    Email TEXT NOT NULL UNIQUE,
+    UserName TEXT NOT NULL UNIQUE,
+    Password TEXT NOT NULL
+);
+
+-- Tabla 2: Tarea --
+CREATE TABLE Tarea(
+Id INTEGER PRIMARY KEY AUTOINCREMENT,
+Nombre TEXT NOT NULL,
+Descripcion TEXT NOT NULL,
+FechaDeExpiracion TEXT NOT NULL,
+Clasificacion INTEGER NOT NULL CHECK (Clasificacion BETWEEN 1 AND 3),
+Estado TEXT NOT NULL,
+Archivada INTEGER NOT NULL CHECK (Archivada IN (0, 1)) NOT NULL,
+IdUsuario INTEGER NOT NULL,
+FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id)
+);
+
+-- Tabla 3: Medalla --
+CREATE TABLE Medalla(
+Id INTEGER PRIMARY KEY AUTOINCREMENT,
+Tipo INTEGER NOT NULL CHECK (Tipo BETWEEN 1 AND 3),
+FechaDeObtencion TEXT NOT NULL,
+IdUsuario INTEGER NOT NULL,
+IdTarea INTEGER NOT NULL,
+FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id),
+FOREIGN KEY (IdTarea) REFERENCES Tarea(Id)
+);

@@ -9,8 +9,16 @@
         Title="DashboardView" Height="450" Width="800">
 
     <StackPanel>
-        <TextBlock Text="{Binding Usuario.Nombre, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="50"/>
-        <TextBlock Text="Prueba"/>
+        <TextBlock Text="{Binding Usuario.Nombre, StringFormat='¡Bienvenido, {0}!', UpdateSourceTrigger=PropertyChanged}" Width="500" Height="50"/>
+        <ListBox ItemsSource="{Binding Usuario.Tareas}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Nombre}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button Content="Agregar Tarea" Command="{Binding AgregarTareaCommand}"/>
     </StackPanel>
 
 </Window>

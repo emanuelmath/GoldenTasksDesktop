@@ -19,6 +19,14 @@ namespace GoldenTasksDesktop.Models
         [Required]
         [ForeignKey("Usuario")]
         public int IdUsuario { get; set; }
+        [Required]
+        [ForeignKey("Tarea")]
+        public int IdTarea { get; set; }
+        [Required]
+        public DateTime FechaDeObtencion { get; set; }
+
+        public virtual Usuario Usuario { get; set; }
+        public virtual Tarea Tarea { get; set; }
 
     }
 }

@@ -39,6 +39,10 @@ namespace GoldenTasksDesktop.Services
             {
                 return new DashboardView();
             }
+            if(viewModel is AgregarTareaViewModel)
+            {
+                return new AgregarTareaView();
+            }
             throw new Exception("No hay una View para ese ViewModel.");
         }
     }

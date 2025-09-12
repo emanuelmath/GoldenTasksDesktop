@@ -52,9 +52,8 @@ namespace GoldenTasksDesktop.ViewModels
         }
         #endregion
 
-        #region Comandos
         public ICommand IniciarSesionCommand { get; }
-        #endregion
+        public ICommand CrearCuentaCommand { get; }
 
         public LoginViewModel(IUsuarioRepository usuarioRepository, INavigationService navigationService)
         {
@@ -62,6 +61,7 @@ namespace GoldenTasksDesktop.ViewModels
             _navigationService = navigationService;
 
             IniciarSesionCommand = new RelayCommand(async _ => await IniciarSesionAsync(UserNameOrEmail, Password)); //,_ => PuedeIniciarSesion(UserName, Password));
+            CrearCuentaCommand = new RelayCommand(_ => CrearCuenta());
         }
         public async Task IniciarSesionAsync(string userNameOrEmail, string password)
         {
@@ -106,6 +106,12 @@ namespace GoldenTasksDesktop.ViewModels
                 Mensaje = !esCorreo ? "Ese nombre de usuario no está registrado." : "Ese correo no está registrado.";
             }
 
+        }
+
+        public void CrearCuenta()
+        {
+            _navigationService.NavegarA<CrearUsuarioViewModel>();
+            Close();
         }
 
         /* Comentada por ahora

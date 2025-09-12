@@ -23,11 +23,13 @@ namespace GoldenTasksDesktop.Models
         [Range(1,3)]
         public int Clasificacion { get; set; }
         [Required]
-        public required string Estado { get; set; } = "INCOMPLETA"; //Enum sugerencia
+        public string Estado { get; set; } = "INCOMPLETA"; //Enum sugerencia
         [Required]
         public bool Archivada { get; set; } = false;
         [Required]
         [ForeignKey("Usuario")]
         public int IdUsuario { get; set; }
+
+        public virtual Usuario Usuario { get; set; }
     }
 }
