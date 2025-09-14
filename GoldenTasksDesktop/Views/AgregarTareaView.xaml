@@ -17,6 +17,10 @@
         <RadioButton Content="Bronce" IsChecked="{Binding RadioButtonBronce, Mode=TwoWay}"></RadioButton>
         <Label Content="Fecha de Expiración"></Label>
         <DatePicker SelectedDate="{Binding FechaDeExpiracion, Mode=TwoWay}"></DatePicker>
+        <Label Content="Hora"></Label>
+        <ComboBox ItemsSource="{Binding Horas}" SelectedItem="{Binding HoraDeExpiracion, Mode=TwoWay}"/>
+        <Label Content="Minutos"></Label>
+        <ComboBox ItemsSource="{Binding Minutos}" SelectedItem="{Binding MinutoDeExpiracion, Mode=TwoWay}"/>
         <TextBlock Text="{Binding Mensaje}"></TextBlock>
             <Button Content="Agregar Tarea" Command="{Binding AgregarTareaCommand}"></Button>
         <Button Content="Regresar" Command="{Binding CerrarCommand}"></Button>

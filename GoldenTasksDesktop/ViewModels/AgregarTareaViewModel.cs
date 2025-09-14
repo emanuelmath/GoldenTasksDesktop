@@ -5,6 +5,7 @@ using GoldenTasksDesktop.Models;
 using GoldenTasksDesktop.Services;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -42,7 +43,7 @@ namespace GoldenTasksDesktop.ViewModels
             }
         }
 
-        private DateTime _fechaDeExpiracion = DateTime.Now;
+        private DateTime _fechaDeExpiracion = DateTime.Now.Date;
         public DateTime FechaDeExpiracion
         {
             get => _fechaDeExpiracion;
@@ -50,6 +51,28 @@ namespace GoldenTasksDesktop.ViewModels
             {
                 _fechaDeExpiracion = value;
                 OnPropertyChanged(nameof(FechaDeExpiracion));
+            }
+        }
+
+        private string _horaDeExpiracion = DateTime.Now.Hour.ToString();
+        public int HoraDeExpiracion
+        {
+            get => Convert.ToInt32(_horaDeExpiracion);
+            set
+            {
+                _horaDeExpiracion = value.ToString();
+                OnPropertyChanged(nameof(HoraDeExpiracion));
+            }
+        }
+
+        private string _minutoDeExpiracion = DateTime.Now.Minute.ToString();
+        public int MinutoDeExpiracion
+        {
+            get => Convert.ToInt32(_minutoDeExpiracion);
+            set
+            {
+                _minutoDeExpiracion = value.ToString();
+                OnPropertyChanged(nameof(MinutoDeExpiracion));
             }
         }
 
@@ -95,6 +118,9 @@ namespace GoldenTasksDesktop.ViewModels
             }
         }
 
+        public List<int> Horas { get; } = [.. Enumerable.Range(1, 24)];
+        public List<int> Minutos { get; } = [.. Enumerable.Range(0, 59)];
+
         public ICommand CerrarCommand { get; }
         public ICommand AgregarTareaCommand { get; }
 
@@ -121,30 +147,83 @@ namespace GoldenTasksDesktop.ViewModels
                 if (!String.IsNullOrEmpty(nombre.Trim()) && !String.IsNullOrEmpty(descripcion.Trim())
                   && (RadioButtonBronce == true || RadioButtonPlata == true || RadioButtonOro == true) && !String.IsNullOrEmpty(fechaDeExpiracion.ToString()))
                 {
-                    Tarea tarea = new()
-                    {
-                        Nombre = nombre.Trim(),
-                        Descripcion = descripcion.Trim(),
-                        //Estado = "INCOMPLETA", -> En el modelo se pone automáticamente. 
-                        Archivada = false, // -> No ha sido completada para archivar.
-                        Clasificacion = AsignarClasificacion(RadioButtonBronce, RadioButtonPlata, RadioButtonOro),
-                        IdUsuario = idUsuario,
-                        FechaDeExpiracion = fechaDeExpiracion
+                   if(FechaDeExpiracion == DateTime.Now.Date)
+                   {
+                        if(HoraDeExpiracion >= DateTime.Now.Hour && MinutoDeExpiracion >= DateTime.Now.Minute + 5)
+                        {
+                            DateTime fechaDeExpiracionCompleta = new(FechaDeExpiracion.Year, FechaDeExpiracion.Month,
+                                FechaDeExpiracion.Day, HoraDeExpiracion, MinutoDeExpiracion, 0);
 
-                    };
+                            Tarea tarea = new()
+                            {
+                                Nombre = nombre.Trim(),
+                                Descripcion = descripcion.Trim(),
+                                //Estado = "INCOMPLETA", -> En el modelo se pone automáticamente. 
+                                Archivada = false, // -> No ha sido completada para archivar.
+                                Clasificacion = AsignarClasificacion(RadioButtonBronce, RadioButtonPlata, RadioButtonOro),
+                                IdUsuario = idUsuario,
+                                FechaDeExpiracion = fechaDeExpiracionCompleta
 
-                    await _tareaRepository.AgregarTareaAsync(tarea);
-                    _onAgregarTarea?.Invoke(true);
+                            };
 
-                    Nombre = "";
-                    Descripcion = "";
-                    RadioButtonBronce = false;
-                    RadioButtonPlata = false;
-                    RadioButtonOro = false;
-                    FechaDeExpiracion = DateTime.Today;
+                            await _tareaRepository.AgregarTareaAsync(tarea);
+                            _onAgregarTarea?.Invoke(true);
 
-                    MessageBox.Show($"¡La tarea {tarea.Nombre} ha sido agregada correctamente!");
-                    Close();
+                            Nombre = "";
+                            Descripcion = "";
+                            RadioButtonBronce = false;
+                            RadioButtonPlata = false;
+                            RadioButtonOro = false;
+                            FechaDeExpiracion = DateTime.Today;
+                            HoraDeExpiracion = 0;
+                            MinutoDeExpiracion = 0;
+                            Mensaje = "";
+
+                            MessageBox.Show($"¡La tarea {tarea.Nombre} ha sido agregada correctamente!");
+                            Close();
+                        }
+                        else
+                        {
+                            Mensaje = "Debes tener mínimo 5 minutos para hacer una tarea.";
+                        }
+                   }
+                   else if(FechaDeExpiracion > DateTime.Now.Date)
+                   {
+                        DateTime fechaDeExpiracionCompleta = new(FechaDeExpiracion.Year, FechaDeExpiracion.Month,
+                                FechaDeExpiracion.Day, HoraDeExpiracion, MinutoDeExpiracion, 0);
+
+                        Tarea tarea = new()
+                        {
+                            Nombre = nombre.Trim(),
+                            Descripcion = descripcion.Trim(),
+                            //Estado = "INCOMPLETA", -> En el modelo se pone automáticamente. 
+                            Archivada = false, // -> No ha sido completada para archivar.
+                            Clasificacion = AsignarClasificacion(RadioButtonBronce, RadioButtonPlata, RadioButtonOro),
+                            IdUsuario = idUsuario,
+                            FechaDeExpiracion = fechaDeExpiracionCompleta
+
+                        };
+
+                        await _tareaRepository.AgregarTareaAsync(tarea);
+                        _onAgregarTarea?.Invoke(true);
+
+                        Nombre = "";
+                        Descripcion = "";
+                        RadioButtonBronce = false;
+                        RadioButtonPlata = false;
+                        RadioButtonOro = false;
+                        FechaDeExpiracion = DateTime.Today;
+                        HoraDeExpiracion = 0;
+                        MinutoDeExpiracion = 0;
+                        Mensaje = "";
+
+                        MessageBox.Show($"¡La tarea {tarea.Nombre} ha sido agregada correctamente!");
+                        Close();
+                   }
+                   else
+                   {
+                        Mensaje = "Debes poner la fecha de hoy o posterior.";
+                   }
                 }
                 else
                 {
