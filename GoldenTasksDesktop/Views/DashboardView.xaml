@@ -7,18 +7,42 @@
         xmlns:local="clr-namespace:GoldenTasksDesktop.Views"
         mc:Ignorable="d"
         Title="DashboardView" Height="450" Width="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-    <StackPanel>
-        <TextBlock Text="{Binding Usuario.Nombre, StringFormat='¡Bienvenido, {0}!', UpdateSourceTrigger=PropertyChanged}" Width="500" Height="50"/>
-        <ListBox ItemsSource="{Binding Usuario.Tareas}">
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Usuario.Nombre, StringFormat='¡Bienvenido, {0}!', UpdateSourceTrigger=PropertyChanged}"
+                   Height="30" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <ListBox Grid.Row="1" ItemsSource="{Binding Usuario.Tareas}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Nombre}" />
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="{Binding Nombre}" Padding="5"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Estado}" Padding="5"/>
+                        <Button Grid.Column="2" Command="{Binding DataContext.CompletarTareaCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" 
+                                CommandParameter="{Binding Id}" Content="Completar" Margin="5,0,0,0"/>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Button Content="Agregar Tarea" Command="{Binding AgregarTareaCommand}"/>
-    </StackPanel>
 
+        <Button Grid.Row="2"
+                Content="Agregar Tarea"
+                Command="{Binding AgregarTareaCommand}"
+                Height="40"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"/>
+    </Grid>
 </Window>

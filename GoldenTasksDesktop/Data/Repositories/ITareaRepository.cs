@@ -14,6 +14,9 @@ namespace GoldenTasksDesktop.Data.Repositories
         Task AgregarTareaAsync(Tarea tarea);
         Task EditarTareaAsync(int id, Tarea tarea);
         Task EliminarTareaAsync(int id);
+        Task<bool> TareaExpiradaAsync(int id);
+        Task CompletarTareaAsync(int id); 
+
 
     }
 }

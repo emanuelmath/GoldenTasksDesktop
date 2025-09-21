@@ -40,5 +40,18 @@ namespace GoldenTasksDesktop.Data.Repositories
             _dbContext.Tareas.Remove(tareaABorrar!);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<bool> TareaExpiradaAsync(int id)
+        {
+            var tareaAComprobar = await _dbContext.Tareas.FindAsync(id);
+            return tareaAComprobar!.FechaDeExpiracion <= DateTime.Now;
+        }
+
+        public async Task CompletarTareaAsync(int id)
+        {
+            var tareaACompletar = await _dbContext.Tareas.FindAsync(id);
+            tareaACompletar!.Estado = "COMPLETADA";
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
